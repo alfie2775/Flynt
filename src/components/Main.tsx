@@ -24,7 +24,7 @@ const Main: React.FC = () => {
   const [value, setValue] = useState<Values>(getValues());
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [modal, toggleModal] = useState(false);
   const [isInputOpen, setIsInputOpen] = useState(false);
 
@@ -50,7 +50,7 @@ const Main: React.FC = () => {
         <Col
           sm="12"
           md="2"
-          className="d-flex order-direction justify-content-evenly align-items-center"
+          className="d-flex order-direction justify-content-evenly"
         >
           <Dropdown>
             <Dropdown.Toggle variant="outline-light" id="lang-dropdown">
@@ -88,6 +88,7 @@ const Main: React.FC = () => {
             </Dropdown.Menu>
           </Dropdown>
           <Button
+            className="m-0"
             variant="outline-danger"
             onClick={() => {
               toggleModal(true);
@@ -95,7 +96,12 @@ const Main: React.FC = () => {
           >
             Reset Code
           </Button>
-          <Button variant="outline-info" onClick={() => handleSubmit()}>
+          <Button
+            href="#output"
+            className="m-0"
+            variant="outline-info"
+            onClick={() => handleSubmit()}
+          >
             Run
           </Button>
           <Modal show={modal} onHide={() => toggleModal(false)}>
@@ -148,7 +154,7 @@ const Main: React.FC = () => {
       </Row>
       <Row>
         <Col sm="12" md="10">
-          <Output isLoading={isLoading} output={output} />
+          <Output isLoading={isLoading} output={output} className="mt-2" />
         </Col>
       </Row>
     </Container>

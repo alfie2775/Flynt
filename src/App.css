@@ -1,17 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400&display=swap");
 .custom-nav {
-  background-color: #302f2f !important;
+  background-color: #242424 !important;
 }
 
 html {
   overflow-y: scroll;
+  scroll-behavior: smooth;
 }
 
 body {
   min-height: 100vh;
+  font-family: "Josefin Sans", sans-serif !important;
   color: white !important;
   background-color: #000000;
-  background-image: -webkit-gradient(linear, left bottom, left top, from(#1f1f1f), color-stop(74%, #3a3a3a));
-  background-image: linear-gradient(0deg, #1f1f1f 0%, #3a3a3a 74%);
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#1f1f1f), color-stop(74%, #2c2c2c));
+  background-image: linear-gradient(0deg, #1f1f1f 0%, #2c2c2c 74%);
 }
 
 .alfie {
@@ -43,6 +46,12 @@ body {
           transform: scale(1.1);
 }
 
+.output {
+  border: 0.05rem solid #ebebeb;
+  padding: 10px;
+  border-radius: 5px;
+}
+
 .modal-titl {
   height: 6vh;
 }
@@ -50,11 +59,11 @@ body {
 .loading {
   width: 65px;
   height: 65px;
-  border: 10px solid skyblue;
-  border-top: 10px solid #54b5db;
+  border: 10px solid #fdfdfd;
+  border-top: 10px solid #444444;
+  border-bottom: 10px solid #444444;
   border-radius: 50%;
-  -webkit-transform: rotate(180deg);
-          transform: rotate(180deg);
+  margin: 0 auto;
   animation: loadingg 1.5s infinite;
   -webkit-animation: loadingg 1.5s infinite;
 }
@@ -95,6 +104,9 @@ body {
   -webkit-box-pack: space-evenly !important;
       -ms-flex-pack: space-evenly !important;
           justify-content: space-evenly !important;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .input {
@@ -147,6 +159,23 @@ img.logo {
   .order-direction .btn {
     margin: 3%;
     margin-bottom: 0;
+  }
+  .justify-content-evenly {
+    margin-top: 2%;
+    -webkit-box-pack: justify !important;
+        -ms-flex-pack: justify !important;
+            justify-content: space-between !important;
+    -webkit-box-align: center !important;
+        -ms-flex-align: center !important;
+            align-items: center !important;
+  }
+}
+
+@media (max-width: 392px) {
+  .justify-content-evenly button {
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
   }
 }
 /*# sourceMappingURL=App.css.map */

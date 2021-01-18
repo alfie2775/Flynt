@@ -1,38 +1,152 @@
-.App {
+.custom-nav {
+  background-color: #302f2f !important;
+}
+
+html {
+  overflow-y: scroll;
+}
+
+body {
+  min-height: 100vh;
+  color: white !important;
+  background-color: #000000;
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#1f1f1f), color-stop(74%, #3a3a3a));
+  background-image: linear-gradient(0deg, #1f1f1f 0%, #3a3a3a 74%);
+}
+
+.alfie {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.link-to-alfie {
+  border: 0.01rem solid #afafaf;
+  background: rgba(255, 255, 255, 0.1);
+  text-decoration: none;
+  color: floralwhite;
+  padding: 2px 3px;
+  border-radius: 20%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.link-to-alfie:hover,
+.link-to-alfie:active {
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  text-decoration: none;
+  color: orange;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.reset-code {
+  background-color: #000000;
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#1f1f1f), color-stop(74%, #3a3a3a));
+  background-image: linear-gradient(0deg, #1f1f1f 0%, #3a3a3a 74%);
+  -webkit-transform: scale(1.1);
+          transform: scale(1.1);
 }
 
-.App-link {
-  color: #61dafb;
+.modal-titl {
+  height: 6vh;
 }
 
-@keyframes App-logo-spin {
+.loading {
+  width: 65px;
+  height: 65px;
+  border: 10px solid skyblue;
+  border-top: 10px solid #54b5db;
+  border-radius: 50%;
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+  animation: loadingg 1.5s infinite;
+  -webkit-animation: loadingg 1.5s infinite;
+}
+
+.input-t:placeholder-shown {
+  color: white !important;
+}
+
+.input-t {
+  margin: 15px 0;
+  background-color: transparent !important;
+  color: white !important;
+}
+
+@-webkit-keyframes loadingg {
   from {
-    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
   }
   to {
-    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
   }
 }
+
+@keyframes loadingg {
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+.justify-content-evenly {
+  -webkit-box-pack: space-evenly !important;
+      -ms-flex-pack: space-evenly !important;
+          justify-content: space-evenly !important;
+}
+
+.input {
+  position: relative;
+  overflow: hidden;
+}
+
+.input-slide {
+  display: none;
+  -webkit-transform: translateY(-120%);
+          transform: translateY(-120%);
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+
+.input-still {
+  display: inline-block;
+  -webkit-transform: translateY(0%);
+          transform: translateY(0%);
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+
+img.logo {
+  width: 40px;
+  height: 50px;
+  margin-right: 5px;
+}
+
+.code-editor {
+  margin-top: 4%;
+}
+
+.order-direction {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .order-direction {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+  }
+  .order-direction .btn {
+    margin: 3%;
+    margin-bottom: 0;
+  }
+}
+/*# sourceMappingURL=App.css.map */

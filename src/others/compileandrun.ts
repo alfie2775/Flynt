@@ -3,10 +3,10 @@ interface Langs {
 }
 
 const langs: Langs = {
-  Python: "PYTHON",
-  "C++14": "CPP14",
-  C: "C",
-  Java: "JAVA",
+  Python: "24",
+  "C++14": "27",
+  C: "26",
+  Java: "4",
 };
 
 export const compileAndRun: (
@@ -15,50 +15,23 @@ export const compileAndRun: (
   input: string
 ) => any = (lang, code, input) => {
   return fetch(
-    `https://api.hackerearth.com/v4/partner/code-evaluation/submissions/`,
+    "https://cors-anywhere.herokuapp.com/https://rextester.com/rundotnet/api",
     {
       method: "POST",
-      body: JSON.stringify({
-        lang: langs[lang],
-        source: code,
-        input: input,
-        memory_limit: 243232,
-        time_limit: 5,
-      }),
       headers: {
-        "client-secret": process.env.REACT_APP_API_KEY || "",
-        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify({
+        LanguageChoice: langs[lang],
+        Program: lang === "Java" ? code.replace("Flynt", "Rextester") : code,
+        Input: input,
+        CompilerArgs: "",
+      }),
     }
   )
-    .then((res) => {
-      return res.json();
-    })
-    .then((res) => {
-      return fetch(res["status_update_url"])
-        .then((res) => res.json())
-        .then((res) => {
-          var stderr: string = "";
-          var status: string;
-          if (res["run_status"].status === "RE") {
-            stderr = res.stderr;
-            status = "Runtime Error";
-          } else {
-            status = "Success";
-          }
-          return {
-            status,
-            stderr,
-            output: fetch(res["run_status"].output).then((res) =>
-              res.toString()
-            ),
-          };
-        })
-        .catch((err) => {
-          return { error: err.message };
-        });
-    })
-    .catch((err) => {
-      return { error: err.message };
-    });
+    .then(
+      (res) => res.json(),
+      (err) => console.log(err)
+    )
+    .catch((err) => console.log(err));
 };

@@ -49,6 +49,7 @@ body {
 .output {
   border: 0.05rem solid #ebebeb;
   padding: 10px;
+  white-space: pre-line;
   border-radius: 5px;
 }
 

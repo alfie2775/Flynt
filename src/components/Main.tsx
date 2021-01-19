@@ -18,22 +18,24 @@ const Main: React.FC = () => {
   const [outputStatus, setOutputStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [modal, toggleModal] = useState(false);
+  const [error, setError] = useState("");
   const [isInputOpen, setIsInputOpen] = useState(false);
   const dispatch = useDispatch();
 
   const handleSubmit: () => void = async () => {
     setIsLoading(true);
     const out = await compileAndRun(lang, value[lang], input);
-    if (out.error) {
-      setOutput("Server is busy, try sometime later");
-      console.log(out.error);
-      setIsLoading(false);
-    } else {
-      setOutput(out.output);
-      setOutputStatus(out.status);
-      setOutput(output + out.stderr);
-      setIsLoading(false);
-    }
+    setOutputStatus(
+      out.Errors
+        ? out.Errors.substring(0, 4) === "Kill"
+          ? "Time Limit Exceeded"
+          : "Runtime Error"
+        : "Success"
+    );
+    setOutput(out.Result);
+    setError(out.Errors);
+
+    setIsLoading(false);
   };
 
   return (
@@ -104,6 +106,7 @@ const Main: React.FC = () => {
             className="m-0"
             variant="outline-info"
             onClick={() => handleSubmit()}
+            disabled={isLoading}
           >
             Run
           </Button>
@@ -144,6 +147,7 @@ const Main: React.FC = () => {
           </Dropdown.Toggle>
           <div className={"input " + (isInputOpen ? "input-slide" : "")}>
             <Form.Control
+              style={{ fontSize: "large" }}
               as="textarea"
               className="input-t"
               placeholder="Input is Empty"
@@ -159,6 +163,7 @@ const Main: React.FC = () => {
           <Output
             isLoading={isLoading}
             status={outputStatus}
+            error={error}
             output={output}
             className="mt-2"
           />

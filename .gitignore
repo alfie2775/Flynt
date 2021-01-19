@@ -10,6 +10,8 @@
 
 # production
 /build
+/.env
+.eslintcache
 
 # misc
 .DS_Store

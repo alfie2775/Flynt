@@ -39,7 +39,7 @@ const Output: React.FC<Props> = ({
               fontSize: "large",
             }}
           >
-            {output + (error || "") || "Output is Empty"}
+            {(output || "") + (error || "") || "Output is Empty"}
           </pre>
         </div>
       </div>

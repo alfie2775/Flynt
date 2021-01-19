@@ -149,3 +149,44 @@ img.logo {
     }
   }
 }
+
+.maintainance {
+  height: 100vh;
+  width: 98vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .maintainance-card {
+    position: relative;
+    display: flex;
+    height: 300px;
+    width: 300px;
+    text-align: center;
+    padding-top: 15px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1);
+    transition: transform 0.2s ease-in-out;
+    &:hover {
+      transform: scale(1.1);
+      transition: all 0.2s ease-in-out;
+    }
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      transform: skewY(40deg);
+    }
+    .maintainance-img {
+      width: 110px;
+      height: 140px;
+    }
+  }
+}

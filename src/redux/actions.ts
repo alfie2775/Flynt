@@ -17,9 +17,20 @@ export const resetValue: (lang: string) => { type: string; payload: string } = (
   };
 };
 
-export const setTheme: (state: string) => { payload: string } = (theme) => {
+export const setTheme: (state: string) => { payload: string; type: string } = (
+  theme
+) => {
   return {
     type: "SET_THEME",
     payload: theme,
+  };
+};
+
+export const setLang: (state: string) => { payload: string; type: string } = (
+  lang
+) => {
+  return {
+    type: "SET_LANG",
+    payload: lang,
   };
 };

@@ -19,7 +19,7 @@ const CodeEditor: React.FC<Props> = ({ value, setValue, lang, theme }) => {
     <Ace
       name="Code Editor"
       fontSize="1.1rem"
-      mode={lang === "c" || lang === "c++14" ? "c_cpp" : lang}
+      mode={lang === "c" || lang === "c++14" || lang === "c++" ? "c_cpp" : lang}
       theme={theme === "Light" ? "dreamweaver" : "twilight"}
       width="100%"
       height="450px"

@@ -6,11 +6,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import { Col, Dropdown, Form, Row, Modal } from "react-bootstrap";
-import { setValue, resetValue, setTheme } from "../redux/actions";
+import { setValue, resetValue, setTheme, setLang } from "../redux/actions";
 import { compileAndRun } from "../others/compileandrun";
 
 const Main: React.FC = () => {
-  const [lang, setLang] = useState("Python");
+  const lang = useSelector((state: any) => state.lang);
   const theme = useSelector((state: any) => state.theme);
   const value = useSelector((state: any) => state.value);
   const [input, setInput] = useState("");
@@ -25,6 +25,12 @@ const Main: React.FC = () => {
   const handleSubmit: () => void = async () => {
     setIsLoading(true);
     const out = await compileAndRun(lang, value[lang], input);
+    if (out.message) {
+      setOutputStatus("");
+      setOutput("Sever is busy try sometime later.");
+      setIsLoading(false);
+      return;
+    }
     setOutputStatus(
       out.Errors
         ? out.Errors.substring(0, 4) === "Kill"
@@ -34,6 +40,7 @@ const Main: React.FC = () => {
     );
     setOutput(out.Result);
     setError(out.Errors);
+    console.log({ out });
 
     setIsLoading(false);
   };
@@ -66,7 +73,7 @@ const Main: React.FC = () => {
                   className="dropdown-hover"
                   active={key === lang ? true : false}
                   key={idx}
-                  onClick={() => setLang(key)}
+                  onClick={() => dispatch(setLang(key))}
                 >
                   {key}
                 </Dropdown.Item>

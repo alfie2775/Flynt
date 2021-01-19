@@ -11,8 +11,12 @@ int main() {
     return 0;
 }
     `,
-  "C++14": `#include<bits/stdc++.h>
-    
+  "C++14": `#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+
 using namespace std;
     
 int main() {
@@ -20,7 +24,7 @@ int main() {
     return 0;
 }
         `,
-  Java: `/import java.util.*;
+  Java: `import java.util.*;
 import java.lang.*;
 import java.io.*;
 

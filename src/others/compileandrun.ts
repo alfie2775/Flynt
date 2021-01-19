@@ -31,7 +31,7 @@ export const compileAndRun: (
   )
     .then(
       (res) => res.json(),
-      (err) => console.log(err)
+      (err) => err
     )
-    .catch((err) => console.log(err));
+    .catch((err) => err);
 };

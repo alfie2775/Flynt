@@ -11,7 +11,7 @@ int main() {
     return 0;
 }
     `,
-  "C++": `#include<bits/stdc++.h>
+  "C++14": `#include<bits/stdc++.h>
     
 using namespace std;
     

@@ -1,36 +1,39 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import CodeEditor from "./CodeEditor";
 import Output from "./Output";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import { Col, Dropdown, Form, Row, Modal } from "react-bootstrap";
-import {
-  getValues,
-  resetValue,
-  updateValue,
-  getTheme,
-  updateTheme,
-} from "../others/functions";
-import { themes } from "../others/themes";
-
-interface Values {
-  [key: string]: string;
-}
+import { setValue, resetValue, setTheme } from "../redux/actions";
+import { compileAndRun } from "../others/compileandrun";
 
 const Main: React.FC = () => {
   const [lang, setLang] = useState("Python");
-  const [theme, setTheme] = useState(getTheme());
-  const [value, setValue] = useState<Values>(getValues());
+  const theme = useSelector((state: any) => state.theme);
+  const value = useSelector((state: any) => state.value);
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [outputStatus, setOutputStatus] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [modal, toggleModal] = useState(false);
   const [isInputOpen, setIsInputOpen] = useState(false);
+  const dispatch = useDispatch();
 
-  const handleSubmit: () => void = () => {
-    setOutput("OP");
-    setIsLoading(false);
+  const handleSubmit: () => void = async () => {
+    setIsLoading(true);
+    const out = await compileAndRun(lang, value[lang], input);
+    if (out.error) {
+      setOutput("Server is busy, try sometime later");
+      console.log(out.error);
+      setIsLoading(false);
+    } else {
+      setOutput(out.output);
+      setOutputStatus(out.status);
+      setOutput(output + out.stderr);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -40,10 +43,9 @@ const Main: React.FC = () => {
           <CodeEditor
             value={value[lang]}
             lang={lang.toLowerCase()}
-            theme={theme.toLowerCase().replace(" ", "_")}
+            theme={theme}
             setValue={(val) => {
-              setValue({ ...value, [lang]: val });
-              updateValue(lang, val);
+              dispatch(setValue(val, lang));
             }}
           />
         </Col>
@@ -59,6 +61,7 @@ const Main: React.FC = () => {
             <Dropdown.Menu>
               {Object.keys(value).map((key, idx) => (
                 <Dropdown.Item
+                  className="dropdown-hover"
                   active={key === lang ? true : false}
                   key={idx}
                   onClick={() => setLang(key)}
@@ -73,13 +76,13 @@ const Main: React.FC = () => {
               Theme
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              {themes.map((key, idx) => (
+              {["Light", "Dark"].map((key, idx) => (
                 <Dropdown.Item
+                  className="dropdown-hover"
                   active={key === theme ? true : false}
                   key={idx}
                   onClick={() => {
-                    setTheme(key);
-                    updateTheme(key);
+                    dispatch(setTheme(key));
                   }}
                 >
                   {key}
@@ -113,8 +116,7 @@ const Main: React.FC = () => {
                 <Button
                   variant="outline-danger"
                   onClick={() => {
-                    resetValue(lang, value);
-                    setValue(getValues());
+                    dispatch(resetValue(lang));
                     toggleModal(false);
                   }}
                 >
@@ -154,7 +156,12 @@ const Main: React.FC = () => {
       </Row>
       <Row>
         <Col sm="12" md="10">
-          <Output isLoading={isLoading} output={output} className="mt-2" />
+          <Output
+            isLoading={isLoading}
+            status={outputStatus}
+            output={output}
+            className="mt-2"
+          />
         </Col>
       </Row>
     </Container>

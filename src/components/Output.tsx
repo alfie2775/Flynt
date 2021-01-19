@@ -4,10 +4,11 @@ import Loading from "./Loading";
 interface Props {
   isLoading: boolean;
   output: string;
+  status: string;
   className?: string;
 }
 
-const Output: React.FC<Props> = ({ isLoading, output, className }) => {
+const Output: React.FC<Props> = ({ isLoading, status, output, className }) => {
   if (isLoading) {
     return (
       <div id="output" className={className || ""}>
@@ -19,6 +20,9 @@ const Output: React.FC<Props> = ({ isLoading, output, className }) => {
     return (
       <div id="output" className={className || ""}>
         <h3>Output</h3>
+        <h6 style={{ color: status === "Runtime Error" ? "red" : "green" }}>
+          {status}
+        </h6>
         <div className="output">{output}</div>
       </div>
     );

@@ -11,11 +11,7 @@ int main() {
     return 0;
 }
     `,
-  "C++14": `#include <cmath>
-#include <cstdio>
-#include <vector>
-#include <iostream>
-#include <algorithm>
+  "C++14": `#include <bits/stdc++.h>
 
 using namespace std;
     

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import CodeEditor from "./CodeEditor";
 import Output from "./Output";
@@ -6,44 +6,61 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import { Col, Dropdown, Form, Row, Modal } from "react-bootstrap";
-import { setValue, resetValue, setTheme, setLang } from "../redux/actions";
+import {
+  setValue,
+  resetValue,
+  setTheme,
+  setLang,
+  setOutput,
+  setInput,
+  addRecentCode,
+} from "../redux/actions";
 import { compileAndRun } from "../others/compileandrun";
 
 const Main: React.FC = () => {
   const lang = useSelector((state: any) => state.lang);
   const theme = useSelector((state: any) => state.theme);
   const value = useSelector((state: any) => state.value);
-  const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
+  const output = useSelector((state: any) => state.output);
+  const input = useSelector((state: any) => state.input);
   const [outputStatus, setOutputStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [modal, toggleModal] = useState(false);
   const [error, setError] = useState("");
   const [isInputOpen, setIsInputOpen] = useState(false);
+  const recentCodes = useSelector((state: any) => state.recentCodes);
   const dispatch = useDispatch();
 
   const handleSubmit: () => void = async () => {
     setIsLoading(true);
+    const [language, code, inp] = [lang, value[lang], input];
     const out = await compileAndRun(lang, value[lang], input);
     if (out.message) {
       setOutputStatus("");
-      setOutput("Sever is busy try sometime later.");
-      setIsLoading(false);
+      dispatch(setOutput("Sever is busy try sometime later."));
       return;
+    } else {
+      setOutputStatus(
+        out.Errors
+          ? out.Errors.substring(0, 4) === "Kill"
+            ? "Time Limit Exceeded"
+            : "Runtime Error"
+          : "Success"
+      );
+      dispatch(setOutput(out.Result));
+      setError(out.Errors);
     }
-    setOutputStatus(
-      out.Errors
-        ? out.Errors.substring(0, 4) === "Kill"
-          ? "Time Limit Exceeded"
-          : "Runtime Error"
-        : "Success"
+    dispatch(
+      addRecentCode(
+        language,
+        code,
+        inp,
+        (out.Result || "") + (out.Errors || "")
+      )
     );
-    setOutput(out.Result);
-    setError(out.Errors);
-    console.log({ out });
-
     setIsLoading(false);
   };
+  useEffect(() => console.log(recentCodes), [recentCodes]);
 
   return (
     <Container>
@@ -154,13 +171,14 @@ const Main: React.FC = () => {
           </Dropdown.Toggle>
           <div className={"input " + (isInputOpen ? "input-slide" : "")}>
             <Form.Control
+              spellCheck={false}
               style={{ fontSize: "large" }}
               as="textarea"
               className="input-t"
               placeholder="Input is Empty"
               rows={5}
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={(e) => dispatch(setInput(e.target.value))}
             />
           </div>
         </Col>

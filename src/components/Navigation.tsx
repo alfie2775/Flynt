@@ -10,19 +10,18 @@ const Navigation: React.FC = () => {
   return (
     <Navbar className="custom-nav" expand="md" variant="dark">
       <Container className="container">
-        <Navbar.Brand href="/">
+        <NavLink
+          to="/"
+          className="nav-link"
+          style={{ color: "white", fontSize: "1.3rem" }}
+        >
           <img className="logo" src="/Flynt.png" alt="" />
           Flynt IDE
-        </Navbar.Brand>
+        </NavLink>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto">
-            <NavLink
-              data-tip
-              data-for="log-in"
-              className="nav-link"
-              to="/recentcodes"
-            >
+            <NavLink className="nav-link" to="/recent-codes">
               Recent Codes
             </NavLink>
             <Button data-tip data-for="log-in" variant="outline-secondary">

@@ -4,9 +4,14 @@ interface Langs {
 
 const langs: Langs = {
   Python: "24",
-  "C++14": "27",
+  "C++14": "7",
   C: "26",
   Java: "4",
+};
+
+const cArgs: Langs = {
+  "C++14": "-Wall -std=c++14 -O2 -o a.out source_file.cpp",
+  C: "-Wall -std=gnu99 -O2 -o a.out source_file.c",
 };
 
 export const compileAndRun: (
@@ -25,7 +30,7 @@ export const compileAndRun: (
         LanguageChoice: langs[lang],
         Program: lang === "Java" ? code.replace("Flynt", "Rextester") : code,
         Input: input,
-        CompilerArgs: "",
+        CompilerArgs: cArgs[lang] || "",
       }),
     }
   )

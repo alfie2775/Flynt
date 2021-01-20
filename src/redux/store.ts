@@ -1,11 +1,12 @@
 import { createStore } from "redux";
 import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage/session";
+import storage from "redux-persist/lib/storage";
 import reducer from "./reducers";
 
 const persistConfig = {
   key: "root",
   storage,
+  whitelist: ["theme", "recentCodes", "lang", "input", "value"],
 };
 
 const persistedReducer = persistReducer<any, any>(persistConfig, reducer);

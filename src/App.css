@@ -186,6 +186,30 @@ img.logo {
   }
 }
 
+.rc:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.rc-1 {
+  width: 5vw;
+}
+
+.rc-2 {
+  width: 6vw;
+}
+
+.rc-3 {
+  width: 17vw;
+}
+
+.rc-4 {
+  width: 10vw;
+}
+
+.rc-5 {
+  width: 12vw;
+}
+
 .maintainance {
   height: 100vh;
   width: 98vw;

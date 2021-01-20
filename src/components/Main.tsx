@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import CodeEditor from "./CodeEditor";
 import Output from "./Output";
@@ -28,7 +28,6 @@ const Main: React.FC = () => {
   const [modal, toggleModal] = useState(false);
   const [error, setError] = useState("");
   const [isInputOpen, setIsInputOpen] = useState(false);
-  const recentCodes = useSelector((state: any) => state.recentCodes);
   const dispatch = useDispatch();
 
   const handleSubmit: () => void = async () => {
@@ -60,7 +59,6 @@ const Main: React.FC = () => {
     );
     setIsLoading(false);
   };
-  useEffect(() => console.log(recentCodes), [recentCodes]);
 
   return (
     <Container>

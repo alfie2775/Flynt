@@ -5,7 +5,7 @@ import Output from "./Output";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import { Col, Dropdown, Form, Row, Modal, Collapse } from "react-bootstrap";
+import { Col, Dropdown, Form, Row, Modal } from "react-bootstrap";
 import {
   setValue,
   resetValue,
@@ -24,7 +24,6 @@ const Main: React.FC = () => {
   const output = useSelector((state: any) => state.output);
   const input = useSelector((state: any) => state.input);
   const isAuth = useSelector((state: any) => state.isAuth);
-  const templates = useSelector((state: any) => state.templates);
   const [outputStatus, setOutputStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [modal, toggleModal] = useState(false);
@@ -60,12 +59,6 @@ const Main: React.FC = () => {
       )
     );
     setIsLoading(false);
-  };
-
-  const fetchTemplates = async () => {
-    return fetch(process.env.REACT_APP_API + "/users/templates").then((res) =>
-      res.json()
-    );
   };
 
   useEffect(() => {

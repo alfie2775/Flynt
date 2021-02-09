@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import CodeEditor from "./CodeEditor";
 import Output from "./Output";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import { Col, Dropdown, Form, Row, Modal } from "react-bootstrap";
+import { Col, Dropdown, Form, Row, Modal, Collapse } from "react-bootstrap";
 import {
   setValue,
   resetValue,
@@ -23,6 +23,8 @@ const Main: React.FC = () => {
   const value = useSelector((state: any) => state.value);
   const output = useSelector((state: any) => state.output);
   const input = useSelector((state: any) => state.input);
+  const isAuth = useSelector((state: any) => state.isAuth);
+  const templates = useSelector((state: any) => state.templates);
   const [outputStatus, setOutputStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [modal, toggleModal] = useState(false);
@@ -59,6 +61,20 @@ const Main: React.FC = () => {
     );
     setIsLoading(false);
   };
+
+  const fetchTemplates = async () => {
+    return fetch(process.env.REACT_APP_API + "/users/templates").then((res) =>
+      res.json()
+    );
+  };
+
+  useEffect(() => {
+    if (isAuth) {
+      fetch(process.env.api + "/users/templates").then((res) =>
+        dispatch({ type: "ADD_TEMPLATES", payload: res.json() })
+      );
+    }
+  }, [isAuth, dispatch]);
 
   return (
     <Container>
@@ -114,6 +130,14 @@ const Main: React.FC = () => {
               ))}
             </Dropdown.Menu>
           </Dropdown>
+          {isAuth && (
+            <Dropdown>
+              <Dropdown.Toggle variant="outline-warning" id="template-dropdown">
+                Templates
+              </Dropdown.Toggle>
+              <Dropdown.Menu></Dropdown.Menu>
+            </Dropdown>
+          )}
           <Button
             className="m-0"
             variant="outline-danger"

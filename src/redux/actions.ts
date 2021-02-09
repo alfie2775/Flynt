@@ -55,6 +55,12 @@ export const addRecentCode: (
   };
 };
 
+export const deleteAllRecentCodes = (): { type: string } => {
+  return {
+    type: "DELETE_ALL_RECENT_CODES",
+  };
+};
+
 export const setInput: (input: string) => { type: string; payload: string } = (
   input
 ) => {

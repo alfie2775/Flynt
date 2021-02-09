@@ -1,19 +1,32 @@
 import React from "react";
-import { Col, Container, Row, Table } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { Col, Container, Row, Table, Button } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { deleteAllRecentCodes } from "../redux/actions";
 import { RecentCode } from "../redux/reducers/recentCodes";
 
 const RecentCodes: React.FC = () => {
   const recentCodes = useSelector((state: any) => state.recentCodes);
   const history = useHistory();
+  const dispatch = useDispatch();
 
   return (
     <Container>
+      <Row style={{ margin: "15px 0px" }}>
+        <Col style={{ display: "flex", justifyContent: "flex-end" }}>
+          <Button
+            variant="outline-danger"
+            onClick={() => dispatch(deleteAllRecentCodes())}
+          >
+            Delete All Codes
+          </Button>
+        </Col>
+      </Row>
       <Row className="justify-content-center">
         <Table
           responsive
           style={{
+            margin: "auto",
             color: "white",
             textAlign: "center",
           }}

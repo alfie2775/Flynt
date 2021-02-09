@@ -19,21 +19,18 @@ export const compileAndRun: (
   code: string,
   input: string
 ) => any = (lang, code, input) => {
-  return fetch(
-    "https://cors-anywhere.herokuapp.com/https://rextester.com/rundotnet/api",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        LanguageChoice: langs[lang],
-        Program: lang === "Java" ? code.replace("Flynt", "Rextester") : code,
-        Input: input,
-        CompilerArgs: cArgs[lang] || "",
-      }),
-    }
-  )
+  const body = new FormData();
+  body.append("LanguageChoice", langs[lang]);
+  body.append(
+    "Program",
+    lang === "Java" ? code.replace("Flynt", "Rextester") : code
+  );
+  body.append("Input", input);
+  body.append("CompilerArgs", cArgs[lang] || "");
+  return fetch("https://rextester.com/rundotnet/api", {
+    method: "POST",
+    body: body,
+  })
     .then(
       (res) => res.json(),
       (err) => err

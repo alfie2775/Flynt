@@ -16,7 +16,7 @@ const Footer: React.FC = () => {
                   className="link-to-alfie"
                   href="https://tarunalfie.netlify.app"
                 >
-                  Alfie
+                  Tarun
                 </a>
               </p>
             </div>

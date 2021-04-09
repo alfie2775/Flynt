@@ -55,9 +55,18 @@ const RecentCodes: React.FC = () => {
                     <td className="rc-1">{idx + 1}</td>
                     <td className="rc-2">{code.lang}</td>
                     <td className="rc-3">
-                      {code.code.length > 100
-                        ? code.code.substring(0, 99) + "..."
-                        : code.code}
+                      <pre
+                        style={{
+                          margin: "0",
+                          color: "white",
+                          fontFamily: "Josefin Sans",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {code.code.length > 100
+                          ? code.code.substring(0, 99) + "..."
+                          : code.code}
+                      </pre>
                     </td>
                     <td className="rc-4">{code.input || "Input was Empty"}</td>
                     <td className="rc-5">{code.output}</td>

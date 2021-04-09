@@ -12,6 +12,7 @@
 /build
 /.env
 .eslintcache
+/others/hepler.js
 
 # misc
 .DS_Store

@@ -6,13 +6,51 @@ import { output } from "./output";
 import { input } from "./input";
 import { recentCodes } from "./recentCodes";
 import { templates } from "./templates";
+import { savedCodes } from "./savedCodes";
 
-const isAuth = (state = false, action: { type: string }) => {
+const isAuth = (state = false, action: { type: string; payload: boolean }) => {
   switch (action.type) {
-    case "AUTH_SUCCESS":
-      return true;
-    case "AUTH_LOGGED_OUT":
-      return false;
+    case "SET_AUTH":
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
+const username = (state = "", action: any) => {
+  switch (action.type) {
+    case "SET_USERNAME":
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
+const toast = (state = false, action: any) => {
+  switch (action.type) {
+    case "SET_TOAST":
+      return action.payload;
+
+    default:
+      return state;
+  }
+};
+
+const toastHeader = (state = "", action: any) => {
+  switch (action.type) {
+    case "SET_TOAST_HEADER":
+      return action.payload;
+
+    default:
+      return state;
+  }
+};
+
+const toastBody = (state = "", action: any) => {
+  switch (action.type) {
+    case "SET_TOAST_BODY":
+      return action.payload;
+
     default:
       return state;
   }
@@ -27,4 +65,9 @@ export default combineReducers({
   output,
   templates,
   isAuth,
+  savedCodes,
+  username,
+  toast,
+  toastHeader,
+  toastBody,
 });

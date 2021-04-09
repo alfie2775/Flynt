@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "../redux/hooks";
 import CodeEditor from "./CodeEditor";
 import Output from "./Output";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import { Col, Dropdown, Form, Row, Modal } from "react-bootstrap";
+import Templates from "./Templates";
+import { Col, Dropdown, Form, Row, Modal, Toast } from "react-bootstrap";
 import {
   setValue,
   resetValue,
@@ -15,63 +16,108 @@ import {
   setInput,
   addRecentCode,
 } from "../redux/actions";
-import { compileAndRun } from "../others/compileandrun";
+import {
+  compileAndRun,
+  getSavedCodes,
+  saveCode,
+  shareCode,
+} from "../others/apiCalls";
+import Loading from "./Loading";
 
 const Main: React.FC = () => {
-  const lang = useSelector((state: any) => state.lang);
-  const theme = useSelector((state: any) => state.theme);
-  const value = useSelector((state: any) => state.value);
-  const output = useSelector((state: any) => state.output);
-  const input = useSelector((state: any) => state.input);
-  const isAuth = useSelector((state: any) => state.isAuth);
-  const [outputStatus, setOutputStatus] = useState("");
+  const lang = useSelector((state) => state.lang);
+  const theme = useSelector((state) => state.theme);
+  const value = useSelector((state) => state.value);
+  const output = useSelector((state) => state.output);
+  const input = useSelector((state) => state.input);
+  const isAuth = useSelector((state) => state.isAuth);
+  const toast = useSelector((state) => state.toast);
+  const toastHeader = useSelector((state) => state.toastHeader);
+  const toastBody = useSelector((state) => state.toastBody);
+  const [savedCodeTitle, setSavedCodeTitle] = useState("");
+  const [savedCodeModal, setSavedCodeModal] = useState(false);
+  const [templateModal, setTemplateModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [modal, toggleModal] = useState(false);
-  const [error, setError] = useState("");
   const [isInputOpen, setIsInputOpen] = useState(false);
   const dispatch = useDispatch();
+
+  const setToast = (value: boolean) =>
+    dispatch({ type: "SET_TOAST", payload: value });
+
+  const setToastHeader = (value: string) =>
+    dispatch({ type: "SET_TOAST_HEADER", payload: value });
+
+  const setToastBody = (value: string) =>
+    dispatch({ type: "SET_TOAST_BODY", payload: value });
+
+  const toggleToast = () => setToast(!toast);
 
   const handleSubmit: () => void = async () => {
     setIsLoading(true);
     const [language, code, inp] = [lang, value[lang], input];
-    const out = await compileAndRun(lang, value[lang], input);
-    if (out.message) {
-      setOutputStatus("");
-      dispatch(setOutput("Sever is busy try sometime later."));
-      return;
+    const res = await compileAndRun(value[lang], lang, input);
+    if (res.error) {
+      dispatch(setOutput("Try agail later"));
     } else {
-      setOutputStatus(
-        out.Errors
-          ? out.Errors.substring(0, 4) === "Kill"
-            ? "Time Limit Exceeded"
-            : "Runtime Error"
-          : "Success"
-      );
-      dispatch(setOutput(out.Result));
-      setError(out.Errors);
+      dispatch(setOutput(res.output));
+      dispatch(addRecentCode(language, code, inp, output));
     }
-    dispatch(
-      addRecentCode(
-        language,
-        code,
-        inp,
-        (out.Result || "") + (out.Errors || "")
-      )
-    );
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    if (isAuth) {
-      fetch(process.env.api + "/users/templates").then((res) =>
-        dispatch({ type: "ADD_TEMPLATES", payload: res.json() })
+  const toggleTemplateModal = () => setTemplateModal(!templateModal);
+
+  const openToast = (header: string, body: string, open: boolean = false) => {
+    setToastHeader(header);
+    setToastBody(body);
+    if (open) setToast(true);
+  };
+
+  const handleShare = async (e: any) => {
+    e.preventDefault();
+    openToast("Generating...", "loading", true);
+    const res = await shareCode(lang, value[lang], input);
+    if (res.success) {
+      openToast(
+        "Generated link",
+        "https://flynt-ide.netlify.app/shared/" + res.url
       );
+    } else {
+      openToast("Generating Failed", "Server is busy, try again later");
     }
-  }, [isAuth, dispatch]);
+  };
+
+  const toggleSavedCodeModal = () => {
+    setSavedCodeModal(!savedCodeModal);
+  };
+
+  const handleSave = async (e: any) => {
+    e.preventDefault();
+    toggleSavedCodeModal();
+    openToast("Saving...", "loading", true);
+    const res1 = await saveCode(savedCodeTitle, lang, value[lang], input);
+    if (res1.success) {
+      openToast("Saved successfully", "");
+    } else {
+      setToastBody("Server is busy, try again later");
+    }
+    const res2 = await getSavedCodes();
+    dispatch({ type: "GET_SAVED_CODES", payload: res2.reverse() });
+    setSavedCodeTitle("");
+  };
 
   return (
     <Container>
       <Row>
+        <Col className="share-container" sm="12" md="10">
+          <Button
+            onClick={(e) => handleShare(e)}
+            style={{ transform: "translateY(50%)" }}
+          >
+            <span className="fa fa-share fa-lg"></span>
+          </Button>
+        </Col>
         <Col sm="12" md="10" className="code-editor">
           <CodeEditor
             value={value[lang]}
@@ -85,10 +131,14 @@ const Main: React.FC = () => {
         <Col
           sm="12"
           md="2"
-          className="d-flex order-direction justify-content-evenly"
+          className="d-flex order-direction align-items-center justify-content-evenly"
         >
           <Dropdown>
-            <Dropdown.Toggle variant="outline-light" id="lang-dropdown">
+            <Dropdown.Toggle
+              className="mr-2 mt-2"
+              variant="outline-light"
+              id="lang-dropdown"
+            >
               {lang}
             </Dropdown.Toggle>
             <Dropdown.Menu>
@@ -105,7 +155,11 @@ const Main: React.FC = () => {
             </Dropdown.Menu>
           </Dropdown>
           <Dropdown>
-            <Dropdown.Toggle variant="outline-success" id="lang-dropdown">
+            <Dropdown.Toggle
+              className="mr-2 mt-2"
+              variant="outline-success"
+              id="lang-dropdown"
+            >
               Theme
             </Dropdown.Toggle>
             <Dropdown.Menu>
@@ -123,16 +177,51 @@ const Main: React.FC = () => {
               ))}
             </Dropdown.Menu>
           </Dropdown>
+          <Modal show={savedCodeModal} onHide={toggleSavedCodeModal}>
+            <Modal.Title className="login-modal-title">
+              Add a title to your code
+            </Modal.Title>
+            <Modal.Body className="login-modal">
+              <Form.Control
+                spellCheck={false}
+                style={{ fontSize: "large" }}
+                as="textarea"
+                className="login-modal"
+                placeholder="Title can not be empty"
+                rows={2}
+                value={savedCodeTitle}
+                onChange={(e) => setSavedCodeTitle(e.target.value)}
+              />
+              <div className="d-flex justify-content-center">
+                <Button
+                  className="m-0 mr-2 mt-2"
+                  variant="outline-primary"
+                  onClick={handleSave}
+                >
+                  Save
+                </Button>
+              </div>
+            </Modal.Body>
+          </Modal>
           {isAuth && (
-            <Dropdown>
-              <Dropdown.Toggle variant="outline-warning" id="template-dropdown">
+            <>
+              <Button
+                onClick={(e) => toggleTemplateModal()}
+                variant="outline-warning"
+                className="m-0 mr-2 mt-2"
+              >
                 Templates
-              </Dropdown.Toggle>
-              <Dropdown.Menu></Dropdown.Menu>
-            </Dropdown>
+              </Button>
+              <Modal onHide={toggleTemplateModal} show={templateModal}>
+                <Modal.Title className="login-modal-title">
+                  Templates
+                </Modal.Title>
+                <Templates />
+              </Modal>
+            </>
           )}
           <Button
-            className="m-0"
+            className="m-0 mr-2 mt-2"
             variant="outline-danger"
             onClick={() => {
               toggleModal(true);
@@ -140,9 +229,18 @@ const Main: React.FC = () => {
           >
             Reset Code
           </Button>
+          {isAuth && (
+            <Button
+              className="m-0 mr-2 mt-2"
+              variant="outline-primary"
+              onClick={toggleSavedCodeModal}
+            >
+              Save
+            </Button>
+          )}
           <Button
             href="#output"
-            className="m-0"
+            className="m-0 mr-2 mt-2"
             variant="outline-info"
             onClick={() => handleSubmit()}
             disabled={isLoading}
@@ -159,6 +257,8 @@ const Main: React.FC = () => {
                   variant="outline-danger"
                   onClick={() => {
                     dispatch(resetValue(lang));
+                    dispatch(setInput(""));
+                    dispatch(setOutput(""));
                     toggleModal(false);
                   }}
                 >
@@ -200,15 +300,30 @@ const Main: React.FC = () => {
       </Row>
       <Row>
         <Col sm="12" md="10">
-          <Output
-            isLoading={isLoading}
-            status={outputStatus}
-            error={error}
-            output={output}
-            className="mt-2"
-          />
+          <Output isLoading={isLoading} output={output} className="mt-2" />
         </Col>
       </Row>
+      <Toast
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%) scale(1.2)",
+        }}
+        show={toast}
+        onClose={toggleToast}
+      >
+        <Toast.Header style={{ paddingLeft: "auto" }}>
+          {toastHeader}
+        </Toast.Header>
+        <Toast.Body style={{ color: "black" }}>
+          {toastBody === "loading" ? (
+            <Loading height="30px" width="30px" borderSize="5px" />
+          ) : (
+            toastBody
+          )}
+        </Toast.Body>
+      </Toast>
     </Container>
   );
 };

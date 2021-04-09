@@ -5,6 +5,11 @@ import "./App.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+if (localStorage.getItem("redux-persisted-flynt") === null) {
+  localStorage.clear();
+  localStorage.setItem("redux-persisted-flynt", "true");
+}
+
 ReactDOM.render(
   <>
     <App />

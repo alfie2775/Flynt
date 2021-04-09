@@ -11,18 +11,29 @@ interface Props {
   value: string;
   setValue: React.Dispatch<any>;
   lang: string;
-  theme: string;
+  theme?: string;
+  showGutter?: boolean;
+  height?: string;
 }
 
-const CodeEditor: React.FC<Props> = ({ value, setValue, lang, theme }) => {
+const CodeEditor: React.FC<Props> = ({
+  value,
+  setValue,
+  lang,
+  theme = "Dark",
+  showGutter = true,
+  height = "450px",
+}) => {
   return (
     <Ace
       name="Code Editor"
       fontSize="1.1rem"
-      mode={lang === "c" || lang === "c++14" || lang === "c++" ? "c_cpp" : lang}
+      mode={
+        lang === "c" || lang === "c++ 17" || lang === "c++" ? "c_cpp" : lang
+      }
       theme={theme === "Light" ? "dreamweaver" : "twilight"}
       width="100%"
-      height="450px"
+      height={height}
       onChange={(val) => setValue(val)}
       value={value}
       editorProps={{ $blockScrolling: true }}
@@ -32,7 +43,7 @@ const CodeEditor: React.FC<Props> = ({ value, setValue, lang, theme }) => {
         showLineNumbers: true,
         tabSize: 4,
       }}
-      showGutter={true}
+      showGutter={showGutter}
     />
   );
 };

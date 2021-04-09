@@ -24,6 +24,7 @@ const Templates: React.FC = () => {
       const newTemplates = await getTemplates();
       dispatch({ type: "ADD_TEMPLATES", payload: newTemplates.templates });
     } else alert("Try again later");
+    toggleModal();
   };
 
   return (

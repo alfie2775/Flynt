@@ -27,9 +27,8 @@ const SavedCodeCard: React.FC<Props> = ({ code, idx }) => {
   return (
     <Row
       className="saved-code-row"
-      onClick={() => history.push(`/saved-codes/${idx}`)}
     >
-      <Col sm="10" className="saved-code-col">
+      <Col sm="10" className="saved-code-col" onClick={() => history.push(`/saved-codes/${idx}`)}>
         <p className="saved-code-title">Title: {" " + code.codeName}</p>
         <p className="saved-code-lang">Language:{" " + code.lang}</p>
         <pre

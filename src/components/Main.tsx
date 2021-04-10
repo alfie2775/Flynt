@@ -27,7 +27,7 @@ import Loading from "./Loading";
 const Main: React.FC = () => {
   const lang = useSelector((state) => state.lang);
   const theme = useSelector((state) => state.theme);
-  const value = useSelector((state) => state.value);
+  const value = useSelector((state) => state.codeInEditor);
   const output = useSelector((state) => state.output);
   const input = useSelector((state) => state.input);
   const isAuth = useSelector((state) => state.isAuth);

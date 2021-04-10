@@ -57,7 +57,7 @@ const toastBody = (state = "", action: any) => {
 };
 
 export default combineReducers({
-  value,
+  codeInEditor: value,
   theme,
   lang,
   recentCodes,

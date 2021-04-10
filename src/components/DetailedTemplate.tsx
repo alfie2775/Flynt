@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { Card, Accordion, Row, Col, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "../redux/hooks";
 import { deleteTemplate, editTemplate, getTemplates } from "../others/apiCalls";
@@ -9,13 +9,12 @@ interface Props {
   code: string;
   idx: number;
   id: string;
-  toggleModal: React.Dispatch<boolean>;
+  toggleModal: any;
 }
 
 const DetailedTemplate: React.FC<Props> = ({ idx, code, id, toggleModal }) => {
   const [editable, setEditable] = useState(false);
   const lang = useSelector((state) => state.lang);
-  const ref = useRef<HTMLPreElement>(null);
   const dispatch = useDispatch();
   const [newCode, setNewCode] = useState(code);
 
@@ -25,7 +24,7 @@ const DetailedTemplate: React.FC<Props> = ({ idx, code, id, toggleModal }) => {
 
   const openInIde = (e: any) => {
     dispatch(setValue(code, lang));
-    toggleModal(false);
+    toggleModal();
   };
 
   const handleSave = async (e: any) => {
@@ -74,7 +73,6 @@ const DetailedTemplate: React.FC<Props> = ({ idx, code, id, toggleModal }) => {
               }}
             >
               <pre
-                ref={ref}
                 style={{ marginBottom: 0, color: "white" }}
                 contentEditable={editable}
               >

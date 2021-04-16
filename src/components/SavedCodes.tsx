@@ -1,11 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import SavedCodeCard from "./SavedCodeCard";
-import { useSelector } from "../redux/hooks";
+import { useDispatch, useSelector } from "../redux/hooks";
+import { getAllUserData } from "../others/apiCalls";
 import { Code } from "../redux/reducers/savedCodes";
 
 const SavedCodes: React.FC = () => {
-  const savedCodes = useSelector((state) => state.savedCodes);
+  const { savedCodes, isAuth } = useSelector((state) => ({
+    savedCodes: state.savedCodes,
+    isAuth: state.isAuth,
+  }));
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isAuth) {
+      getAllUserData(dispatch);
+    }
+  });
 
   if (savedCodes.length === 0) {
     return (

@@ -120,3 +120,11 @@ export const deleteSavedCode = async (codeId: string) => {
     .then((res) => res.data)
     .catch((err) => err);
 };
+
+export const getAllUserData = async (dispatch: any) => {
+  const templates = await getTemplates();
+  if ("templates" in templates)
+    dispatch({ type: "ADD_TEMPLATES", payload: templates.templates });
+  const savedCodes = await getSavedCodes();
+  dispatch({ type: "GET_SAVED_CODES", payload: savedCodes.reverse() });
+};

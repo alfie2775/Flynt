@@ -14,10 +14,12 @@ const DetailedRecentCode = ({ match }: RouteComponentProps<Params>) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const style = {
+  const preTagStyle = {
     fontSize: "1.2rem",
-    paddingLeft: "5%",
+    paddingLeft: "1%",
     paddingTop: "1%",
+    paddingBottom: "1%",
+    color: "white",
     marginTop: "1%",
     border: "2px solid white",
     borderRadius: "5px",
@@ -50,39 +52,21 @@ const DetailedRecentCode = ({ match }: RouteComponentProps<Params>) => {
       <Row>
         <Col>
           <p style={{ fontSize: "1.5rem" }}>Code:</p>
-          <div style={style}>
-            {recentCode.code.split("").map((el: string) => {
-              if (el === "\t") return <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>;
-              else if (el === "\n") return <br />;
-              return <span>{el}</span>;
-            })}
-          </div>
+          <pre style={preTagStyle}>{recentCode.code}</pre>
         </Col>
       </Row>
       <Row style={{ marginTop: "2%" }}>
         <Col sm="12" md="6">
           <p style={{ fontSize: "1.5rem" }}>Input:</p>
-          <div style={style}>
-            {recentCode.input
-              ? recentCode.input.split("").map((el: string) => {
-                  if (el === "\t") return <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>;
-                  else if (el === "\n") return <br />;
-                  return <span>{el}</span>;
-                })
-              : "Input is Empty"}
-          </div>
+          <pre style={preTagStyle}>
+            {recentCode.input ? recentCode.input : "Input is Empty"}
+          </pre>
         </Col>
         <Col sm="12" md="6">
           <p style={{ fontSize: "1.5rem" }}>Output:</p>
-          <div style={style}>
-            {recentCode.output
-              ? recentCode.output.split("").map((el: string) => {
-                  if (el === "\t") return <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>;
-                  else if (el === "\n") return <br />;
-                  return <span>{el}</span>;
-                })
-              : "Output is empty"}
-          </div>
+          <pre style={preTagStyle}>
+            {recentCode.output ? recentCode.output : "Output is empty"}
+          </pre>
         </Col>
       </Row>
     </Container>

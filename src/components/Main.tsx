@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "../redux/hooks";
 import CodeEditor from "./CodeEditor";
 import Output from "./Output";
@@ -18,6 +18,7 @@ import {
 } from "../redux/actions";
 import {
   compileAndRun,
+  getAllUserData,
   getSavedCodes,
   saveCode,
   shareCode,
@@ -98,7 +99,10 @@ const Main: React.FC = () => {
     openToast("Saving...", "loading", true);
     const res1 = await saveCode(savedCodeTitle, lang, value[lang], input);
     if (res1.success) {
-      openToast("Saved successfully", "");
+      openToast(
+        "Saved successfully",
+        "You can click your username at the top right to access your saved codes."
+      );
     } else {
       setToastBody("Server is busy, try again later");
     }
@@ -106,6 +110,12 @@ const Main: React.FC = () => {
     dispatch({ type: "GET_SAVED_CODES", payload: res2.reverse() });
     setSavedCodeTitle("");
   };
+
+  useEffect(() => {
+    if (isAuth) {
+      getAllUserData(dispatch);
+    }
+  });
 
   return (
     <Container>
